@@ -1,0 +1,7 @@
+type: framework
+content:
+- Sigmoid function
+- Gradient descent with MSE
+- Log-Loss
+- Visualize it
+current_task: 3

@@ -1,0 +1,83 @@
+<div class="step-text">
+<h5 id="description">Description</h5>
+<p>In previous stages, we have successfully carried out the Stochastic gradient descent on the Mean squared error and Log-loss cost functions.</p>
+<p>At this stage, you need to train three models:</p>
+<ul>
+<li>Your implementation of logistic regression with the <code class="language-python">fit_mse</code> cost function;</li>
+<li>The same logistic regression with the <code class="language-python">fit_log_loss</code> cost function;</li>
+<li>The <code class="language-python">sklearn</code> logistic regression algorithm.</li>
+</ul>
+<p>Our cost functions can determine errors in the following way:</p>
+<ul>
+<li>The Mean squared error from <code class="language-python">fit_mse</code>:</li>
+</ul>
+<p><span class="math-tex">\[J(b_0,b_1, ...) ={1\over n} { \displaystyle\sum_{i=1}^{n}(\hat{y_i}-y_i)^{2}}\]</span></p>
+<ul>
+<li>The Log-loss from <code class="language-python">fit_log_loss</code>:</li>
+</ul>
+<p><span class="math-tex">\[J(b_0,b_1, ...) = -{1\over n} \displaystyle\sum_{i=1}^{n}{y_i \cdot log(\hat{y_i})}+({1-y_i) \cdot log(1-\hat{y_i})}\]</span></p>
+<p>Our goal is to minimize errors during the training process. In this stage, we are going to analyze their behavior.</p>
+<h5 id="objectives">Objectives</h5>
+<ol>
+<li>Load the dataset and select the same independent and target variables as in the previous stage;</li>
+<li>Standardize <code class="language-python">X</code>;</li>
+<li>Instantiate the <code class="language-python">CustomLogisticRegression</code> class;</li>
+<li>Use the train-test split from Stage 1;</li>
+<li>Fit a model with the training set using the <code class="language-python">fit_log_loss</code> method;</li>
+<li>Fit a model with the training set using the <code class="language-python">fit_mse</code> method;</li>
+<li>Import <code class="language-python">LogisticRegression</code> from <code class="language-python">sklearn.linear_model</code> and fit it with the training set;</li>
+<li>Determine the error values during the first and the last epoch of training custom logistic regression for <code class="language-python">fit_mse</code> method;<br/>
+<div class="alert alert-warning">We need to recalculate the error after each step of stochastic gradient descent as the coefficients and bias are updated.</div></li>
+<li>Repeat the same operation for <code class="language-python">fit_log_loss</code> method;</li>
+<li>Predict <code class="language-python">y_hat</code> values for the test set with all three models;</li>
+<li>Calculate the accuracy scores for the test set for all models;</li>
+<li>Print the accuracy scores of all models and the errors from the first and the last epochs of the training custom models as a Python dictionary. Please, print the accuracies and errors in the same order as in the Examples section.</li>
+</ol>
+<p>Use the following parameters for all three models:</p>
+<pre><code class="language-python">n_epoch = 1000  # although this parameter can be specified only for custom models
+fit_intercept = True
+l_rate = 0.01
+
+columns = ['worst concave points', 'worst perimeter', 'worst radius'] # same as in the previous stage</code></pre>
+<p>If your solution works properly, you will receive <em>graph.jpg </em>in the current directory. It shows the errors plotted on four graphs. Explore these plots and answer the following questions:</p>
+<ol>
+<li>What is the minimum MSE value for the first epoch?</li>
+<li>What is the minimum MSE value for the last epoch?</li>
+<li>What is the maximum Log-loss value for the first epoch?</li>
+<li>What is the maximum Log-loss value for the last epoch?</li>
+<li>Has the range of the MSE values expanded or narrowed? (<code class="language-python">expanded</code>/<code class="language-python">narrowed</code>)</li>
+<li>Has the range of the Log-loss values expanded or narrowed? (<code class="language-python">expanded</code>/<code class="language-python">narrowed</code>)</li>
+</ol>
+<p>Once you're done with the Objectives, provide answers to the questions in the format shown below. Round number to the fifth decimal place:</p>
+<pre><code class="language-python">Answers to the questions:  # the actual answers may differ
+1) 0.00080
+2) 0.00000
+3) 0.00242
+4) 0.00100
+5) expanded
+6) narrowed</code></pre>
+<p><strong>Tip:</strong> In Python, you can use triple quotes <code class="language-python">"""here is your multi-line string"""</code> to print multi-line strings.</p>
+<h5 id="examples">Examples</h5>
+<p> </p>
+<p></p><div class="alert alert-primary">There're several examples below with different instantiation parameters and, therefore, different answers. The independent variables also differ, but the train-test split parameters always remain the same (<code class="language-python">train_size=0.8</code>, <code class="language-python">random_state=43</code>). Only a part of the answers is shown due to the large lengths of error arrays. After each output example, there's an attached text file with a full answer, so you can test your program to be sure that it works fine.</div>
+<p> </p>
+<p><strong>Example 1: </strong><em>instantiation parameters</em></p>
+<pre><code class="language-python">n_epoch = 30
+fit_intercept = False
+l_rate = 0.01
+columns = ['mean radius', 'mean smoothness'] # names of independent variables</code></pre>
+<p><em>Output (a Python dict):</em></p>
+<pre><code class="language-no-highlight">{'mse_accuracy': 0.8947368421052632, 'logloss_accuracy': 0.8947368421052632, 'sklearn_accuracy': 0.9035087719298246, 'mse_error_first': [0.0005494505494505495, 0.0005487619260382545, ...], 'mse_error_last': [0.0002595746966187235, 3.58874250533432e-05, ...], 'logloss_error_first': [0.0015234003968350445, 0.001523388285406441, ...], 'logloss_error_last': [0.0014739026005740753, 0.0014436401701211706, ...]}</code></pre>
+<p><a href="https://stepik.org/media/attachments/lesson/575739/output4example1_stage4.txt" rel="noopener noreferrer nofollow" target="_blank">Download full output as a file</a></p>
+<p><img alt="Logistic Regression from Scratch: Log-loss function charts for example 1" height="1000" name="pic4example1_stage4.jpg" src="https://ucarecdn.com/978ced5a-9ca3-4bc2-958a-b6da7f945a65/" width="2000"/></p>
+<p><strong>Example 2: </strong><em>i</em><em>nstantiation parameters</em></p>
+<pre><code class="language-python">n_epoch = 500
+fit_intercept = True
+l_rate = 1
+columns = ['smoothness error', 'mean fractal dimension', 'texture error'] # names of independent variables</code></pre>
+<p><em>Output (a Python dict):</em></p>
+<pre><code class="language-no-highlight">{'mse_accuracy': 0.6052631578947368, 'logloss_accuracy': 0.6666666666666666, 'sklearn_accuracy': 0.6666666666666666, 'mse_error_first': [0.0005494505494505495, 0.000604497455225717, ...], 'mse_error_last': [0.0009635572252935032, 0.0008034312168157345, ...], 'logloss_error_first': [0.0015234003968350445, 0.0015243461138814232, ...], 'logloss_error_last': [0.002177979476029927, 0.0010583180413733793, ...]}
+</code></pre>
+<p> <a href="https://stepik.org/media/attachments/lesson/575739/output4example2_stage4.txt" rel="noopener noreferrer nofollow" target="_blank">Download full output as a file</a></p>
+<p><img alt="Logistic Regression from Scratch: Log-loss function charts for example 2" height="1000" name="pic4example2_stage4.jpg" src="https://ucarecdn.com/f485948b-79a8-4788-8b53-a91c05602f39/" width="2000"/></p>
+</div>

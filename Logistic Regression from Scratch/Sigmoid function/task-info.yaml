@@ -1,0 +1,86 @@
+type: edu
+files:
+- name: test/__init__.py
+  visible: false
+  learner_created: false
+- name: test/tests.py
+  visible: false
+  text: |-
+    import ast
+    from hstest.stage_test import List
+    from hstest import *
+
+    answer = [0.38601, 0.99885, 0.03703, 0.12322, 0.26804, 0.47657, 0.91722, 0.878, 0.0193, 0.07406]
+
+
+    class LogisticRegression(StageTest):
+
+        def generate(self) -> List[TestCase]:
+            return [TestCase(time_limit=1000000)]
+
+        def check(self, reply: str, attach):
+
+            reply = reply.strip().lower()
+
+            if len(reply) == 0:
+                return CheckResult.wrong("No output was printed")
+
+            if reply.count('[') != 1 or reply.count(']') != 1:
+                return CheckResult.wrong('Print output as a list')
+
+            index_from = reply.find('[')
+            index_to = reply.find(']')
+            list_str = reply[index_from: index_to + 1]
+
+            try:
+                user_list = ast.literal_eval(list_str)
+            except Exception as e:
+                return CheckResult.wrong(f"Seems that output is in wrong format.\n"
+                                         f"Make sure you use only the following Python structures in the output: string, int, float, list, dictionary")
+
+            if not isinstance(user_list, list):
+                return CheckResult.wrong('Print output as a list')
+
+            if len(user_list) != 10:
+                return CheckResult.wrong(f'Output should contain 10 values, found {len(user_list)}')
+
+            for reply_coef, answer_coef in zip(user_list, answer):
+
+                try:
+                    reply_coef = float(reply_coef)
+                except ValueError:
+                    return CheckResult.wrong("There should be only numbers in the list, found something else")
+
+                # 2% error is allowed
+                error = abs(answer_coef * 0.02)
+                if not answer_coef - error < reply_coef < answer_coef + error:
+                    return CheckResult.wrong(f"Incorrect probability values. Check\n"
+                                             f"(1) if you copied the values of coefficients correctly\n"
+                                             f"(2) if you set fit_intercept=True\n"
+                                             f"(3) `predict_proba` method implementation")
+
+            return CheckResult.correct()
+
+
+    if __name__ == '__main__':
+        LogisticRegression().run_tests()
+  learner_created: false
+- name: logistic.py
+  visible: true
+  text: |
+    # write your code here
+  learner_created: false
+- name: tests.py
+  visible: false
+  text: |-
+    from test.tests import LogisticRegression
+
+    if __name__ == '__main__':
+        LogisticRegression().run_tests()
+  learner_created: false
+feedback_link: https://hyperskill.org/learn/step/16784#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Sat, 17 Jun 2023 03:45:37 UTC"
+record: 1

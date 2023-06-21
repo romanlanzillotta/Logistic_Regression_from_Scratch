@@ -1,0 +1,14 @@
+type: hyperskill
+title: Logistic Regression from Scratch
+language: English
+summary: "<p>In this project, we will take a look at the logistic regression algorithm\
+  \ and build a custom binary classifier. The main idea of the project is to implement\
+  \ gradient descent for two different cost functions, devise a method to predict\
+  \ the probability that a given sample belongs to a certain class, and analyze training\
+  \ errors. And last but not least — put your models to the test on a real dataset.</p><br/><br/>Learn\
+  \ more at <a href=\"https://hyperskill.org/projects/219?utm_source=ide&utm_medium=ide&utm_campaign=ide&utm_content=project-card\"\
+  >https://hyperskill.org/projects/219</a>"
+programming_language: Python
+content:
+- Logistic Regression from Scratch
+mode: Study

@@ -1,0 +1,113 @@
+<div class="step-text">
+<h5 id="description">Description</h5>
+<p>In the previous stage, we have provided you with the <code class="language-python">coef_</code> values. In this stage, you need to estimate the <code class="language-python">coef_</code> values by gradient descent on the <strong>Mean squared error</strong> cost function. Gradient descent is an optimization technique for finding the local minimum of a cost function by first-order differentiating. To be precise, we're going to implement the <a href="https://towardsdatascience.com/gradient-descent-algorithm-and-its-variants-10f652806a3" rel="noopener noreferrer nofollow" target="_blank">Stochastic gradient descent</a> (SGD).</p>
+<p>The Mean squared error<strong> </strong>cost function can be expressed as:</p>
+<p><span class="math-tex">\[J(b_0,b_1, ...) ={1\over n} { \displaystyle\sum_{i=1}^{n}(\hat{y_i}-y_i)^{2}}\]</span></p>
+<p>Where <span class="math-tex">\(i\)</span> indexes the rows (observations), and:</p>
+<p><span class="math-tex">\[\hat{y_i} = {1 \over 1 + e^{-t_i}}, \ \ \ \ t_i =b_0 + b_1x_{i1} + b_2x_{i2} +...\]</span> <span class="math-tex">\(\hat{y_i}\)</span> is the predicted probability value for the <span class="math-tex">\(i^{th}\)</span> row, while <span class="math-tex">\(y_i\)</span> is its actual value. As usual, <span class="math-tex">\(x_{ij}\)</span> is a value of the <span class="math-tex">\(i^{th}\)</span> row and the <span class="math-tex">\(j^{th}\)</span> column. In other words, it's the <span class="math-tex">\(i^{th}\)</span> value of the <span class="math-tex">\(j^{th}\)</span> independent variable. Weights are updated by their first-order derivatives in the training loop as follows: <span class="math-tex">\[b_1 = b_1 - l\_rate \cdot (\hat{y_i}-y_i) \cdot \hat{y_i} \cdot (1-\hat{y_i}) \cdot x_{i1} \\ b_2 = b_2 - l\_rate \cdot (\hat{y_i}-y_i) \cdot \hat{y_i} \cdot (1-\hat{y_i}) \cdot x_{i2} \\ ... \\ b_j = b_j - l\_rate \cdot (\hat{y_i}-y_i) \cdot \hat{y_i} \cdot (1-\hat{y_i}) \cdot x_{ij} \\ ...\]</span></p>
+<p>The bias <span class="math-tex">\(b_0\)</span> can be updated by: <span class="math-tex">\[b_0 = b_0 - l\_rate \cdot (\hat{y_i}-y_i) \cdot \hat{y_i} \cdot (1-\hat{y_i})\]</span></p>
+<p>For learning purposes, we will use the entire training set to update weights sequentially. The number of the <strong>epoch</strong> <code class="language-python">n_epoch</code> is the number of iterations over the training set. A <strong>training loop</strong> is a nested for-loop over <code class="language-python">n_epoch</code> and all the rows in the train set. If <code class="language-python">n_epoch = 10</code> and the number of rows in the training set is 100, the coefficients are updated 1000 times after training loops:</p>
+<pre><code class="language-python"># Training loop
+for one_epoch in range(n_epoch):
+    for i, row in enumerate(X_train):
+        # update weight b0
+        # update weight b1
+        # update weight b2
+             ...
+
+</code></pre>
+<p> </p>
+<p></p><div class="alert alert-primary">The initial values of the weights are insignificant; they are optimized to the values that minimize the cost function. So, you can randomize the weights or set them to zeros. The weight optimization process occurs inside the <code class="language-python">fit_mse</code> method.</div>
+<p> </p>
+<p>If a particular weight value is updated by large increments, it descents down the quadratic curve in an erratic way and may jump to the opposite side of the curve. In this case, we may miss the value of the weight that minimizes the loss function. The<strong> learning rate</strong> <code class="language-python">l_rate</code> can tune the value for updating the weight to the step size that allows for gradual descent along the curve with every iteration: </p>
+<pre><code class="language-python">class CustomLogisticRegression:
+
+    def __init__(self, fit_intercept=True, l_rate=0.01, n_epoch=100):
+        self.fit_intercept = ...
+        self.l_rate = ...
+        self.n_epoch = ...
+
+    def sigmoid(self, t):
+        return ...
+
+    def predict_proba(self, row, coef_):
+        t = ...
+        return self.sigmoid(t)
+
+    def fit_mse(self, X_train, y_train):
+        self.coef_ = ...  # initialized weights
+
+        for _ in range(self.n_epoch):
+            for i, row in enumerate(X_train):
+                y_hat = self.predict_proba(row, coef_)
+                # update all weights
+
+    def predict(self, X_test, cut_off=0.5):
+        ...
+        for row in X_test:
+            y_hat = self.predict_proba(row, self.coef_)
+        return predictions # predictions are binary values - 0 or 1</code></pre>
+<p>The <code class="language-python">predict</code> method calculates the values of <code class="language-python">y_hat</code> for each row in the test set and returns a <code class="language-python">numpy</code> array that contains these values. Since we are solving a binary classification problem, the predicted values can be only <span class="math-tex">\(0\)</span> or <span class="math-tex">\(1\)</span>. The return of <code class="language-python">predict</code> depends on the <strong>cut-off</strong> <strong>point</strong>. The <code class="language-python">predict_proba</code> probabilities that are less than the cut-off point are rounded to <span class="math-tex">\(0\)</span>, while those that are equal or bigger are rounded to <span class="math-tex">\(1\)</span>. Set the default cut-off value to<strong> </strong><span class="math-tex">\(0.5\)</span>. To determine the prediction accuracy of your model, use <code class="language-python">accuracy_score</code> from <code class="language-python">sklearn.metrics</code>.</p>
+<h5 id="objectives">Objectives</h5>
+<ol>
+<li>Implement the <code class="language-python">fit_mse</code> method;</li>
+<li>Implement the <code class="language-python">predict</code> method;</li>
+<li>Load the dataset. Select the following columns as independent variables: <code class="language-python">worst concave points</code>, <code class="language-python">worst perimeter</code>, <code class="language-python">worst radius</code>. The target variable remains the same;</li>
+<li>Standardize <code class="language-python">X</code>;</li>
+<li>Instantiate the <code class="language-python">CustomLogisticRegression</code> class with the following attributes:
+	<pre><code class="language-python">lr = CustomLogisticRegression(fit_intercept=True, l_rate=0.01, n_epoch=1000)</code></pre>
+</li>
+<li>Fit the model with the training set from the previous stage (<code class="language-python">train_size=0.8</code> and <code class="language-python">random_state=43</code>) using <code class="language-python">fit_mse</code>;</li>
+<li>Predict <code class="language-python">y_hat</code> values for the test set;</li>
+<li>Calculate the accuracy score for the test set;</li>
+<li>Print <code class="language-python">coef_</code> array and accuracy score as a Python dictionary in the format shown in the Examples section.</li>
+</ol>
+<h5 id="examples">Examples</h5>
+<p></p><div class="alert alert-primary">The training set in the examples below is the same as in the Objectives section. Only the test set and <code class="language-python">CustomLogisticRegression</code> class attributes vary.
+
+<p>Example test set (features are standardized):</p>
+<table border="1" cellpadding="1" cellspacing="1" style="width: 500px;">
+<caption>Standardized X_test and y_test data</caption>
+<tbody>
+<tr>
+<td style="width: 25%;"><code class="language-python">worst concave points</code></td>
+<td style="width: 25%;"><code class="language-python">worst perimeter</code></td>
+<td style="width: 20%;"><code class="language-python">worst radius</code></td>
+<td style="width: 10%;"><code class="language-python">y</code></td>
+</tr>
+<tr>
+<td>0.320904</td>
+<td>0.230304</td>
+<td>-0.171560</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>-1.743529</td>
+<td>-0.954428</td>
+<td>-0.899849</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>1.014627</td>
+<td>0.780857</td>
+<td>0.773975</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>1.432990</td>
+<td>-0.132764</td>
+<td>-0.123973</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://stepik.org/media/attachments/lesson/575739/example_stage2-3.txt" rel="noopener noreferrer nofollow" target="_blank">Download as a file</a></p></div>
+<p><strong>Example 1: </strong><em>processing the CustomLogisticRegression class with the following attributes</em></p>
+<pre><code class="language-python">lr = CustomLogisticRegression(fit_intercept=True, l_rate=0.01, n_epoch=100)</code></pre>
+<p><em>Output (a Python dict):</em></p>
+<pre><code class="language-no-highlight">{'coef_': [ 0.7219814 , -2.06824488, -1.44659819, -1.52869155], 'accuracy': 0.75}</code></pre>
+<p><strong>Example 2:</strong> <em>processing the CustomLogisticRegression class with the following attributes</em></p>
+<pre><code class="language-python">lr = CustomLogisticRegression(fit_intercept=False, l_rate=0.01, n_epoch=100)</code></pre>
+<p><em>Output (a Python dict):</em></p>
+<pre><code class="language-no-highlight">{'coef_': [-1.86289827, -1.60283708, -1.69204615], 'accuracy': 0.75}</code></pre>
+</div>

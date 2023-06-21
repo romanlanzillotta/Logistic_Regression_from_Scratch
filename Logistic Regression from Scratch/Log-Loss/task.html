@@ -1,0 +1,105 @@
+<div class="step-text">
+<h5 id="description">Description</h5>
+<p>The Mean squared error cost function produces a <a href="https://towardsdatascience.com/optimization-loss-function-under-the-hood-part-ii-d20a239cde11" rel="noopener noreferrer nofollow" target="_blank">non-convex graph</a> with the <strong>local</strong> and <strong>global minimums</strong> when applied to a sigmoid function. If a weight value is close to a local minimum, gradient descent minimizes the cost function by the local (not global) minimum. This presents grave limitations to the Mean squared error cost function if we apply it to binary classification tasks. The<strong> Log-loss</strong> cost function may help to overcome this issue.</p>
+<p>We can represent it in the following way:</p>
+<p><span class="math-tex">\[J(b_0,b_1, ...) = -{1\over n} \displaystyle\sum_{i=1}^{n}\big[{y_i \cdot ln(\hat{y_i})}+({1-y_i) \cdot ln(1-\hat{y_i})}\big]\]</span></p>
+<p>where</p>
+<p><span class="math-tex">\[\hat{y_i} = {1 \over 1 + e^{-t}}; \ \ t =b_0 + b_1x_{i 1}+ b_2x_{i2} +...\]</span>In the previous stage, you've implemented the Stochastic gradient descent with the Mean squared error loss function and obtained the <code class="language-python">coef_</code> values. The procedure of applying the Stochastic gradient descent to the Log-loss cost function is similar. The only differences are the first-order differentials with which we will update the weights.</p>
+<p>The bias <span class="math-tex">\(b_0\)</span> is updated with:</p>
+<p><span class="math-tex">\[b_0 = b_0 - {l\_rate \cdot (\hat{y_i}-y_i) \over N}\]</span>While the coefficients <span class="math-tex">\(b_j\)</span> are updated with:</p>
+<p><span class="math-tex">\[b_j = b_j - {l\_rate\cdot (\hat{y_i}-y_i) \cdot x_{ij} \over N}\]</span></p>
+<p>where <span class="math-tex">\(i\)</span> is the observation (row) index. <span class="math-tex">\(j\)</span> is the independent variable (column) index. <span class="math-tex">\(N\)</span> is the number of rows in the training set.</p>
+<p>Similar to the <code class="language-python">fit_mse</code> method, the log-loss can be fitted without a bias term.</p>
+<p>The attributes and methods in the <code class="language-python">CustomLogisticRegression</code> class are:</p>
+<pre><code class="language-python">class CustomLogisticRegression:
+
+    def __init__(self, fit_intercept=True, l_rate=0.01, n_epoch=100):
+        self.fit_intercept = ...
+        self.l_rate = ...
+        self.n_epoch = ...
+
+    def sigmoid(self, t):
+        return ...
+
+    def predict_proba(self, row, coef_):
+        t = ...
+        return self.sigmoid(t)
+
+    def fit_mse(self, X_train, y_train):
+        self.coef_ = ...  # initialized weights
+
+        for _ in range(self.n_epoch):
+            for i, row in enumerate(X_train):
+                y_hat = self.predict_proba(row, coef_)
+                # update all weights
+
+    def fit_log_loss(self, X_train, y_train):
+        # stochastic gradient descent implementation
+
+    def predict(X_test, cut_off=0.5):
+        ...
+        for row in X_test:
+            y_hat = self.predict_proba(row, self.coef_)
+        return predictions # predictions are binary values — 0 or 1</code></pre>
+<h5 id="objectives">Objectives</h5>
+<ol>
+<li>Implement <code class="language-python">fit_log_loss</code>;</li>
+<li>Load the dataset and select the same independent and target variables as in the previous stage;</li>
+<li>Standardize <code class="language-python">X</code>;</li>
+<li>Instantiate the <code class="language-python">CustomLogisticRegression</code> class with the following attributes:
+	<pre><code class="language-python">lr = CustomLogisticRegression(fit_intercept=True, l_rate=0.01, n_epoch=1000)</code></pre>
+</li>
+<li>Fit the model with the training set from Stage 1 using <code class="language-python">fit_log_loss</code>;</li>
+<li>Predict <code class="language-python">y_hat</code> values for the test set;</li>
+<li>Calculate the accuracy score for the test set;</li>
+<li>Print <code class="language-python">coef_</code> array and accuracy score as a Python dictionary in the format shown in the Examples section.</li>
+</ol>
+<h5 id="examples">Examples</h5>
+<p></p><div class="alert alert-primary">The training set below remains the same as in the Objectives. Only the test set and the <code class="language-python">CustomLogisticRegression</code> class attributes change.
+
+<p>Example test set:</p>
+<table border="1" cellpadding="1" cellspacing="1" style="width: 500px;">
+<caption>Standardized X_test and y_test data</caption>
+<tbody>
+<tr>
+<td style="width: 25%;"><code class="language-python">worst concave points</code></td>
+<td style="width: 25%;"><code class="language-python">worst perimeter</code></td>
+<td style="width: 25%;"><code class="language-python">worst radius</code></td>
+<td style="width: 10%;"><code class="language-python">y</code></td>
+</tr>
+<tr>
+<td>0.320904</td>
+<td>0.230304</td>
+<td>-0.171560</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>-1.743529</td>
+<td>-0.954428</td>
+<td>-0.899849</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>1.014627</td>
+<td>0.780857</td>
+<td>0.773975</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>1.432990</td>
+<td>-0.132764</td>
+<td>-0.123973</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://stepik.org/media/attachments/lesson/575739/example_stage2-3.txt" rel="noopener noreferrer nofollow" target="_blank">Download as a file</a></p></div>
+<p><strong>Example 1: </strong><em>processing the CustomLogisticRegression class with the following attributes</em></p>
+<pre><code class="language-python">lr = CustomLogisticRegression(fit_intercept=True, l_rate=0.01, n_epoch=100)</code></pre>
+<p><em>Output (a Python dict):</em></p>
+<pre><code class="language-no-highlight">{'coef_': [ 0.10644459, -0.2961112 , -0.27592773, -0.27338684], 'accuracy': 0.75}</code></pre>
+<p><strong>Example 2: </strong><em>processing the CustomLogisticRegression class with the following attributes</em></p>
+<pre><code class="language-python">lr = CustomLogisticRegression(fit_intercept=False, l_rate=0.01, n_epoch=100)</code></pre>
+<p><em>Output (a Python dict):</em></p>
+<pre><code class="language-no-highlight">{'coef_': [-0.29627229, -0.27640283, -0.27384802], 'accuracy': 0.75}</code></pre>
+</div>

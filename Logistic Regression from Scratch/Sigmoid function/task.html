@@ -1,0 +1,173 @@
+<div class="step-text">
+<h5 id="description">Description</h5>
+<p>In this project, we will work on a classification algorithm that makes predictions when a dependent variable assumes discrete values. Logistic regression is arguably the simplest solution. In the case of binary classification (class 0 or class 1), it uses a<strong> sigmoid function</strong> to estimate how likely an observation belongs to class 1. It looks as follows:<br/>
+<span class="math-tex">\[S(t) = {{1} \over {1 + e^{-t}}}\]</span>where</p>
+<p><span class="math-tex">\[t = b_0 + b_1x_1 + b_2x_2+...\]</span></p>
+<p><span class="math-tex">\(b_0\)</span> is the bias; <span class="math-tex">\(b_1, b_2, ...\)</span> are the coefficients. You can fit logistic models without a bias term. In this case, <span class="math-tex">\(t\)</span> would look like this:</p>
+<p><span class="math-tex">\[t = b_1x_1 + b_2x_2+...\]</span></p>
+<p>To complete this stage, the <code class="language-python">CustomLogisticRegression</code> class should contain the following attributes and methods:</p>
+<pre><code class="language-python">class CustomLogisticRegression:
+
+    def __init__(self, fit_intercept=True, l_rate=0.01, n_epoch=100):
+        self.fit_intercept = ...
+        self.l_rate = ...
+        self.n_epoch = ...
+
+    def sigmoid(self, t):
+        return ...
+
+    def predict_proba(self, row, coef_):
+        t = ...
+        return self.sigmoid(t)</code></pre>
+<p><code class="language-python">fit_intercept</code> attribute is set to <code class="language-python">True</code> when the logistic model is fitted with a bias (<span class="math-tex">\(t\)</span> contains <span class="math-tex">\(b_0\)</span>). Otherwise, it is set to <code class="language-python">False</code>, and the logistic model is fitted without any bias (<span class="math-tex">\(t\)</span> doesn't contain <span class="math-tex">\(b_0\)</span>). We will discuss the <code class="language-python">l_rate</code> and <code class="language-python">n_epoch</code> attributes in later stages. </p>
+<p>The <code class="language-python">sigmoid</code> method based on the formula above takes a value of <code class="language-python">t</code> and returns a float in the range of <span class="math-tex">\([0, 1]\)</span>. In this case, the <code class="language-python">predict_proba</code> method:</p>
+<ul>
+<li>Takes a row from a dataset and coefficients including a bias (designated as <code class="language-python">coef_</code>);</li>
+<li>Calculates <code class="language-python">t</code>;</li>
+<li>Calls the <code class="language-python">sigmoid</code> method and then returns its value.</li>
+</ul>
+<p>The <code class="language-python">coef_</code> array is provided in this stage. The values for bias and coefficients are obtained from minimizing the cost function using gradient descent. You will be able to retrieve these values in later stages. <code class="language-python">Row</code> is the only row in the dataframe. The <code class="language-python">row</code> and <code class="language-python">coef_</code> are represented as <span class="math-tex">\(x_1, x_2, ...\)</span> and <span class="math-tex">\(b_0, b_1, b_2, ...\)</span> respectively in <code class="language-python">t</code>. Remember that the bias <span class="math-tex">\(b_0\)</span> is present only when <code class="language-python">fit_intercept</code> is <code class="language-python">True</code>. You can get <code class="language-python">t</code> from <code class="language-python">row</code> and <code class="language-python">coef_</code> with <code class="language-python">numpy.dot</code>.</p>
+<p>In this project, we will work with the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_breast_cancer.html" rel="noopener noreferrer nofollow" target="_blank">Wisconsin Breast Cancer Dataset</a> from the <code class="language-python">sklearn</code> library. Learn carefully how to load and use dataset from the given link. The target variable is denoted by <code class="language-python">y</code>. The matrix of selected independent variables will be referred to as <code class="language-python">X</code>.</p>
+<p>You may want to<strong> standardize</strong> the features if they are measured in different units. Suppose <span class="math-tex">\(x\)</span> is a feature. <a href="https://www.spss-tutorials.com/z-scores-what-and-why/" rel="noopener noreferrer nofollow" target="_blank">Z-standardization</a> can be calculated as follows:</p>
+<p><span class="math-tex">\[z_i = {{x_i-\mu} \over \sigma}\]</span><span class="math-tex">\(z_i\)</span> is the standard score for the <span class="math-tex">\(i^{th}\)</span> sample of the <span class="math-tex">\(x\)</span> feature; <span class="math-tex">\(x_i\)</span> is the value of the <span class="math-tex">\(i^{th}\)</span> sample in <span class="math-tex">\(x\)</span>; <span class="math-tex">\(\mu\)</span> and <span class="math-tex">\(\sigma\)</span> are the mean and standard deviation of <span class="math-tex">\(x\)</span>, respectively. See an example below where the standard score is calculated with <span class="math-tex">\(\mu = 2.0, \ \sigma=3.207\)</span>:</p>
+<table border="1" cellpadding="1" style="width: 700px;">
+<tbody>
+<tr>
+<td>x</td>
+<td>1</td>
+<td>3</td>
+<td>-3</td>
+<td>4 </td>
+<td>5</td>
+<td>6</td>
+<td>-2</td>
+</tr>
+<tr>
+<td>z</td>
+<td>-0.3118</td>
+<td>-0.3118</td>
+<td>-1.559</td>
+<td>0.6236</td>
+<td>0.9354</td>
+<td>1.2472</td>
+<td>-1.2472</td>
+</tr>
+</tbody>
+</table>
+<h5 id="objectives">Objectives</h5>
+<ol>
+<li>Create the <code class="language-python">CustomLogisticRegression</code> class;</li>
+<li>Create the <code class="language-python">__init__</code> method;</li>
+<li>Create the <code class="language-python">sigmoid</code> method;</li>
+<li>Create the <code class="language-python">predict_proba</code> method;</li>
+<li>Load the Breast Cancer Wisconsin dataset. Select <code class="language-python">worst concave points</code> and <code class="language-python">worst perimeter</code> as features and <code class="language-python">target</code> as the target variable;</li>
+<li>Standardize <code class="language-python">X</code>;</li>
+<li>Split the dataset including the target variable into training and test sets. Set <code class="language-python">train_size=0.8</code> and <code class="language-python">random_state=43</code>;</li>
+<li>Given the coefficients below, calculate the probabilities of the first 10 rows in the test set. You don't need the training set in this stage;</li>
+<li>Print these probabilities as a Python list.</li>
+</ol>
+<p>Take the following values as bias and coefficients: <code class="language-python">[0.77001597, -2.12842434, -2.39305793]</code>. It means that the model is fitted with an intercept, so <code class="language-python">t</code> contains the bias term <span class="math-tex">\(b_0\)</span> of <code class="language-python">0.77001597</code>; the coefficient of <code class="language-python">worst concave points</code> <span class="math-tex">\(b_1\)</span> is <code class="language-python">-2.12842434</code>,<span style="color: #000000;"> </span>and the coefficient of <code class="language-python">worst perimeter</code> <span class="math-tex">\(b_2\)</span> is <code class="language-python">-2.39305793</code>.</p>
+<h5 id="examples">Examples</h5>
+<p><strong>Example 1: </strong><em>an example test set; features have been standardized</em></p>
+<table border="1" cellpadding="1" cellspacing="1" style="width: 500px;">
+<caption>Standardized X_test and y_test data</caption>
+<tbody>
+<tr>
+<td><code class="language-python">worst concave points</code></td>
+<td><code class="language-python">worst perimeter</code></td>
+<td><code class="language-python">y</code></td>
+</tr>
+<tr>
+<td>0.320904</td>
+<td>0.230304</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>-1.743529</td>
+<td>-0.954428</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>1.014627</td>
+<td>0.780857</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>1.432990</td>
+<td>-0.132764</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://stepik.org/media/attachments/lesson/575739/example1_stage1.txt" rel="noopener noreferrer nofollow" target="_blank">Download as a file</a></p>
+<p><em>Output:</em></p>
+<pre><code class="language-no-highlight">[0.38601, 0.99885, 0.03703, 0.12322]</code></pre>
+<p><strong>Example 2: </strong><em>an example test set; features have been standardized</em></p>
+<table border="1" cellpadding="1" cellspacing="1" style="width: 500px;">
+<caption>Standardized X_test and y_test data</caption>
+<tbody>
+<tr>
+<td><code class="language-python">worst concave points</code></td>
+<td><code class="language-python">worst perimeter</code></td>
+<td><code class="language-python">y</code></td>
+</tr>
+<tr>
+<td>0.106398</td>
+<td>0.646939</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>0.320904</td>
+<td>0.075553</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>-0.244875</td>
+<td>-0.465477</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>0.646467</td>
+<td>-1.077931</td>
+<td>1.0</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://stepik.org/media/attachments/lesson/575739/example2_stage1.txt" rel="noopener noreferrer nofollow" target="_blank">Download as a file</a></p>
+<p><em>Output:</em> </p>
+<pre><code class="language-no-highlight">[0.26804, 0.47657, 0.91722, 0.878]</code></pre>
+<p><strong>Example 3:</strong> <em>an example test set; features have been standardized</em></p>
+<table border="1" cellpadding="1" cellspacing="1" style="width: 500px;">
+<caption>Standardized X_test and y_test data</caption>
+<tbody>
+<tr>
+<td><code class="language-python">worst concave points</code></td>
+<td><code class="language-python">worst perimeter</code></td>
+<td><code class="language-python">y</code></td>
+</tr>
+<tr>
+<td>-0.030521</td>
+<td>-0.231566</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>-0.899652</td>
+<td>-0.595824</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>0.918783</td>
+<td>-1.242799</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>0.792514</td>
+<td>0.420765</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://stepik.org/media/attachments/lesson/575739/example3_stage1.txt" rel="noopener noreferrer nofollow" target="_blank">Download as a file</a></p>
+<p><em>Output:</em> </p>
+<pre><code class="language-no-highlight">[0.80045, 0.98387, 0.85675, 0.12745]</code></pre>
+</div>
